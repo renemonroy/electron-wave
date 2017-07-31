@@ -4,7 +4,8 @@
   "description": "Set of scripts to simplify creation of electron apps.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:cli": "rollup -c rollup.config.cli.js"
   },
   "repository": {
     "type": "git",
@@ -14,5 +15,17 @@
     "electron"
   ],
   "author": "René Monroy <rene.dev.js@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.3.0",
+    "eslint-plugin-import": "^2.7.0",
+    "minimist": "^1.2.0",
+    "rollup": "^0.45.2",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-string": "^2.0.2"
+  }
 }
