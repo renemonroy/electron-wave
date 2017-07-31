@@ -1,6 +1,6 @@
 import minimist from 'minimist';
 import readme from './README.txt';
-import { version } from '../../package.json';
+import { version } from '../package.json';
 
 const command = minimist(process.argv.slice(2), {
 	alias: {
@@ -13,5 +13,5 @@ if (command.help) {
 } else if (command.version) {
 	console.log(`electron-wave version ${version}`); // eslint-disable-line no-console
 } else {
-	console.log('running a command...'); // eslint-disable-line no-console
+	console.log('Running a command...', command._[0]); // eslint-disable-line no-console
 }
