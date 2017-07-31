@@ -1,0 +1,18 @@
+{
+  "name": "electron-wave",
+  "version": "1.0.0",
+  "description": "Set of scripts to simplify creation of electron apps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@churris.github.com:churris/electron-wave.git"
+  },
+  "keywords": [
+    "electron"
+  ],
+  "author": "René Monroy <rene.dev.js@gmail.com>",
+  "license": "MIT"
+}
