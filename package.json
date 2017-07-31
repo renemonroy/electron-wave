@@ -1,5 +1,5 @@
 {
-  "name": "electron-wave",
+  "name": "@renemonroy/electron-wave",
   "version": "1.0.0",
   "description": "Set of scripts to simplify creation of electron apps.",
   "main": "index.js",
@@ -13,6 +13,11 @@
   },
   "keywords": [
     "electron"
+  ],
+  "files": [
+    "dist",
+    "bin/electron-wave",
+    "README.md"
   ],
   "author": "René Monroy <rene.dev.js@gmail.com>",
   "license": "MIT",
