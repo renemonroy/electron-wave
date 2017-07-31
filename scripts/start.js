@@ -1,3 +1,3 @@
-module.exports = (opts) => {
-	console.log(opts); // eslint-disable-line no-console
+export default (options) => {
+	console.log(options); // eslint-disable-line no-console
 };
