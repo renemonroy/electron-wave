@@ -1,6 +1,6 @@
 {
   "name": "@renemonroy/electron-wave",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Set of scripts to simplify creation of electron apps.",
   "main": "index.js",
   "bin": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:cli": "rollup -c rollup.config.cli.js",
-    "prepublish": "run npm build:cli"
+    "prepublish": "npm run build:cli"
   },
   "repository": {
     "type": "git",
