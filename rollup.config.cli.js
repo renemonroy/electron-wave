@@ -11,7 +11,7 @@ export default {
 	banner: '#!/usr/bin/env node',
 	plugins: [
 		string({
-			include: '**/*.md'
+			include: '**/*.txt'
 		}),
 		json(),
 		buble(),
