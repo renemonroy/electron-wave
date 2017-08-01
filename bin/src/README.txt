@@ -1,4 +1,4 @@
-electron-wave version {{version}}
+electron-wave v{{-version}}
 =====================================
 
 Usage: electron-wave <command>
