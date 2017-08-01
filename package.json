@@ -1,6 +1,6 @@
 {
   "name": "@renemonroy/electron-wave",
-  "version": "1.0.19",
+  "version": "1.0.25",
   "description": "Set of scripts to simplify creation of electron apps.",
   "main": "dist/electron-wave.js",
   "module": "dist/electron-wave.es.js",
@@ -28,7 +28,10 @@
   ],
   "author": "René Monroy <rene.dev.js@gmail.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "chalk": "^2.0.1",
+    "figlet": "^1.2.0"
+  },
   "devDependencies": {
     "@renemonroy/electron-wave": "^1.0.17",
     "eslint": "^4.3.0",

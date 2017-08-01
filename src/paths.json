@@ -1,0 +1,5 @@
+{
+	"packageJson": "package.json",
+	"nodeModules": "node_modules",
+	"src": "src"
+}

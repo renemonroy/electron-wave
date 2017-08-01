@@ -3,6 +3,9 @@ import eslint from 'rollup-plugin-eslint';
 import buble from 'rollup-plugin-buble';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import json from 'rollup-plugin-json';
+import commonjs from 'rollup-plugin-commonjs';
+import { dependencies } from './package.json';
 
 const { version } = JSON.parse(readFileSync('package.json', 'utf-8'));
 
@@ -19,8 +22,9 @@ export default {
 	banner,
 	sourceMap: true,
 	plugins: [
+		json(),
 		eslint({
-			exclude: 'node_modules/**',
+			exclude: ['node_modules/**', '**/*.html', '**/*.css', '**/*.json'],
 			include: 'src/**',
 			throwError: true
 		}),
@@ -29,6 +33,9 @@ export default {
 			target: {
 				node: '0.12'
 			}
+		}),
+		commonjs({
+			include: 'node_modules/**'
 		}),
 		nodeResolve({
 			jsnext: true
@@ -42,6 +49,7 @@ export default {
 	],
 	external: [
 		'fs',
-		'path'
-	]
+		'path',
+		'os',
+	].concat(Object.keys(dependencies))
 };

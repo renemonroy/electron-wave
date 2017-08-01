@@ -16,7 +16,7 @@ export default {
 		}),
 		json(),
 		eslint({
-			exclude: 'node_modules/**',
+			exclude: ['node_modules/**', '**/*.html', '**/*.css', '**/*.json'],
 			include: 'bin/src/**',
 			throwError: true
 		}),
