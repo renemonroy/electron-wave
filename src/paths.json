@@ -1,5 +1,7 @@
 {
+	"wave": "wave.json",
 	"packageJson": "package.json",
 	"nodeModules": "node_modules",
-	"src": "src"
+	"src": "src",
+	"build": "dist"
 }

@@ -1,8 +1,10 @@
-import log from '../log';
-import config from '../config';
+import log from '../lib/log';
+import config from '../lib/config';
 
 export default (options) => {
 	const hrstart = process.hrtime();
+
+	process.env.NODE_ENV = 'development';
 
 	log.debugging = Boolean(options.debug);
 	log.clear();
