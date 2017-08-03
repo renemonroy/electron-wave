@@ -1,8 +1,6 @@
 import path from 'path';
-import fs from 'fs-extra';
+import glob from 'globby';
 import pathsJSON from '../paths.json';
-
-const SOURCE_CONTEXT = '{{sourceContext}}';
 
 const config = {
 	debug: false,
@@ -10,28 +8,26 @@ const config = {
 	watch: null
 };
 
-const rendererExists = (rendererPath) => (
-	fs.statSync(rendererPath).isDirectory()
+const addRenderers = () => (
+	new Promise((resolve) => {
+		const rndrs = config.paths.renderers;
+		const ext = '.html';
+		config.renderers = {};
+		glob([`*${ext}`], { cwd: rndrs }).then((files) => {
+			files
+				.map(filename => path.basename(filename, ext))
+				.forEach((name) => {
+					const pathname = `${name}Renderer`;
+					config.renderers[name] = { pathname, dependencies: null };
+					config.paths[pathname] = path.resolve(rndrs, name);
+				});
+			resolve();
+		});
+	})
 );
 
-const buildRenderers = (renderersConfig) => {
-	const renderers = {};
-	Object.keys(renderersConfig).forEach((key) => {
-		const rendrPath = renderersConfig[key];
-		const rendererPath = path.normalize(rendrPath.replace(SOURCE_CONTEXT, config.paths.src));
-		if (rendererExists(rendererPath)) {
-			const pathname = `${key}Renderer`;
-			renderers[key] = { pathname };
-			config.paths[pathname] = rendererPath;
-		} else {
-			throw new Error(`No such dir renderer exists with name ${key}.`);
-		}
-	});
-	return renderers;
-};
-
 config.set = (options = {}) => (
-	new Promise((resolve, reject) => {
+	new Promise((resolve) => {
 		Object.keys(options).forEach(key => {
 			if (config.hasOwnProperty(key)) {
 				config[key] = typeof options[key] === 'undefined' ?
@@ -44,22 +40,16 @@ config.set = (options = {}) => (
 		}
 
 		config.cache = new Map();
+		config.dependants = new Map();
 		config.paths = {};
 		
 		Object.keys(pathsJSON).forEach((pathname) => {
 			config.paths[pathname] = path.resolve(config.cwd, pathsJSON[pathname]);
 		});
-
-		if (!fs.existsSync(config.paths.wave)) {
-			return reject('No wave.json found at root of project.');
-		}
-
-		const { mainJS, renderers } = JSON.parse(fs.readFileSync(config.paths.wave, 'utf-8'));
 		
-		config.paths.mainJS = path.normalize(mainJS.replace(SOURCE_CONTEXT, config.paths.src));
-		config.renderers = buildRenderers(renderers);
-
-		resolve();
+		Promise.resolve()
+			.then(addRenderers)
+			.then(() => resolve());
 	})
 );
 

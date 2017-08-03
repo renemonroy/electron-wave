@@ -19,6 +19,9 @@ export default (options) => {
 		.then(produce)
 		.then(() => {
 			const hrend = process.hrtime(hrstart);
+			if (config.debug) {
+				log.debug('App config: ↴\n', config);
+			}
 			log.success(`Building done in ${hrend[0]}s with ${(hrend[1] / 1000000).toFixed(3)}ms`);
 		})
 		.catch((err) => {

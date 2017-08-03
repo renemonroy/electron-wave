@@ -9,7 +9,7 @@ import log from './log';
 import { filterNulls } from './utils';
 import config from './config';
 
-const compileJS = (src) => (
+const js = (src) => (
 	new Promise((resolve, reject) => {
 		log.debug(`Compiling: ${src}`);
 		const isProduction = process.env.NODE_ENV === 'production';
@@ -61,5 +61,5 @@ const compileJS = (src) => (
 );
 
 export default {
-	compileJS
+	js
 };
