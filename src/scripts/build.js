@@ -2,6 +2,7 @@ import log from '../lib/log';
 import config from '../lib/config';
 import prepare from '../lib/prepare';
 import produce from '../lib/produce';
+import deliver from '../lib/deliver';
 
 export default (options) => {
 	const hrstart = process.hrtime();
@@ -17,11 +18,10 @@ export default (options) => {
 		.set(options)
 		.then(prepare)
 		.then(produce)
+		.then(deliver)
 		.then(() => {
 			const hrend = process.hrtime(hrstart);
-			if (config.debug) {
-				log.debug('App config: ↴\n', config);
-			}
+			log.debug('App config: ↴\n', config);
 			log.success(`Building done in ${hrend[0]}s with ${(hrend[1] / 1000000).toFixed(3)}ms`);
 		})
 		.catch((err) => {

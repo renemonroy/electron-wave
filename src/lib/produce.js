@@ -1,6 +1,9 @@
+import path from 'path';
 import config from './config';
 import log from './log';
-import compile from './compile';
+import compileJS from './compileJS';
+
+const INDEX_JS = 'index.js';
 
 export default () => (
 	new Promise((resolve, reject) => {
@@ -8,8 +11,8 @@ export default () => (
 
 		const compileScripts = Array.from(config.renderers.keys()).map((name) => {
 			const renderer = config.renderers.get(name);
-			const src = config.paths[renderer.pathname];
-			return compile.js(`${src}/index.js`).then((result) => {
+			const src = path.join(config.paths[renderer.pathname], INDEX_JS);
+			return compileJS(src).then((result) => {
 				const dependencies = result.map.sources;
 				const dependants = config.dependants;
 				renderer.dependencies = dependencies;
@@ -22,16 +25,15 @@ export default () => (
 					}
 					dependants.get(dependency).add(name);
 				});
-				return result;
+				return { renderer: name, entry: src, code: result.code };
 			});
 		});
 		
 		Promise.all(compileScripts)
-			.then(() => {
-				resolve();
+			.then((result) => {
+				log.debug('Bundles: ↴\n', result);
+				resolve(result);
 			})
-			.catch((err) => {
-				reject(err);
-			});
+			.catch((err) => reject(err));
 	})
 );

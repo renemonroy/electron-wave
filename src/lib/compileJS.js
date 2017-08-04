@@ -9,7 +9,7 @@ import log from './log';
 import { filterNulls } from './utils';
 import config from './config';
 
-const js = (src) => (
+export default (src) => (
 	new Promise((resolve, reject) => {
 		log.debug(`Compiling: ${src}`);
 		const isProduction = process.env.NODE_ENV === 'production';
@@ -59,7 +59,3 @@ const js = (src) => (
 			});
 	})
 );
-
-export default {
-	js
-};
