@@ -15,17 +15,17 @@ export default () => (
 			return compileJS(src).then((result) => {
 				const dependencies = result.map.sources;
 				const dependants = config.dependants;
-				renderer.dependencies = dependencies;
-				Object.keys(dependants).forEach((dependant) => {
-					dependants.get(dependant).delete(name);
-				});
-				dependencies.forEach((dependency) => {
-					if (!dependants.has(dependency)) {
-						dependants.set(dependency, new Set());
+				const removeDependant = (dependant) => dependants.get(dependant).delete(name);
+				const addDependant = (dependant) => {
+					if (!dependants.has(dependant)) {
+						dependants.set(dependant, new Set());
 					}
-					dependants.get(dependency).add(name);
-				});
-				return { renderer: name, entry: src, code: result.code };
+					dependants.get(dependant).add(name);
+				};
+				renderer.dependencies = dependencies;
+				Object.keys(dependants).forEach(removeDependant);
+				renderer.dependencies.forEach(addDependant);
+				return { type: 'renderer', name, src, code: result.code };
 			});
 		});
 		

@@ -17,7 +17,7 @@ export default {
 	entry: 'src/electron-wave.js',
 	targets: [
 		{ dest: 'dist/electron-wave.js', format: 'cjs' },
-		{ dest: 'dist/electron-wave.es.js', format: 'es' }
+		// { dest: 'dist/electron-wave.es.js', format: 'es' }
 	],
 	banner,
 	sourceMap: true,
