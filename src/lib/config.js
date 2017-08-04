@@ -10,21 +10,21 @@ const config = {
 
 const addRenderers = () => (
 	new Promise((resolve, reject) => {
-		const rndrs = config.paths.renderers;
-		config.renderers = new Map();
-		fs.readdir(rndrs, (err, files) => {
-			if (err) return reject(err);
-			const folders = files.filter(name => (
-				fs.statSync(`${rndrs}/${name}`).isDirectory() && !name.startsWith('_')
-			));
-			if (folders.length === 0) return reject('No renderers found.');
-			folders.forEach(name => {
-				const pathname = `${name}Renderer`;
-				config.renderers.set(name, { pathname, dependencies: null });
-				config.paths[pathname] = path.resolve(rndrs, name);
-			});
+		try {
+			const rndrs = config.paths.renderers;
+			config.renderers = new Map();
+			fs
+				.readdirSync(rndrs)
+				.filter(name => fs.statSync(`${rndrs}/${name}`).isDirectory() && !name.startsWith('_'))
+				.forEach(name => {
+					const pathname = `${name}Renderer`;
+					config.renderers.set(name, { pathname, dependencies: null });
+					config.paths[pathname] = path.resolve(rndrs, name);
+				});
 			resolve();
-		});
+		} catch (err) {
+			return reject();
+		}
 	})
 );
 

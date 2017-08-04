@@ -51,7 +51,7 @@ export default (src) => (
 				resolve(bundle.generate({
 					format: 'iife',
 					moduleName: src,
-					sourceMap: isProduction ? true : 'inline'
+					sourceMap: 'inline'
 				}));
 			})
 			.catch((err) => {

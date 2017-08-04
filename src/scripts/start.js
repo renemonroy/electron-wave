@@ -13,6 +13,10 @@ export default (options) => {
 
 	config
 		.set(options)
+		// .then(produce)
+		// .then(serve)
+		// .then(launch)
+		// .then(watch)
 		.then(() => {
 			const hrend = process.hrtime(hrstart);
 			log.success(`Server started in ${hrend[0]}s with ${(hrend[1] / 1000000).toFixed(3)}ms`);

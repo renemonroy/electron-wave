@@ -7,25 +7,25 @@ export default (bundles) => (
 		log.debug('Delivering production files...');
 		const renderersPath = config.paths.renderers;
 		const buildPath = config.paths.build;
-		
-		const ensureFiles = bundles.map((bundle) => {
-			if (bundle.type === 'renderer') {
-				const src = bundle.src.replace(renderersPath, buildPath);
-				return fs.ensureFile(src).then(() => {
-					fs.writeFileSync(src, bundle.code);
-					return src;
-				});
-			} else {
-				return null;
-			}
-		});
 
-		Promise
-			.all(ensureFiles)
+		const ensureBundles = () => (
+			Promise.all(bundles.map((bundle) => {
+				if (bundle.type === 'renderer') {
+					const src = bundle.src.replace(renderersPath, buildPath);
+					return Promise.resolve()
+						.then(() => fs.ensureFile(src))
+						.then(() => fs.writeFile(src, bundle.code))
+						.then(() => { return { src, type: bundle.type }; });
+				}
+			}))
+		);
+
+		Promise.resolve()
+			.then(ensureBundles)
 			.then((results) => {
 				log.debug('Created sources: ↴\n', results);
 				resolve();
 			})
-			.catch((err) => reject(err));
+			.catch(err => reject(err));
 	})
 );
