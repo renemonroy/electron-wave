@@ -1,5 +1,5 @@
 import path from 'path';
-import glob from 'globby';
+import fs from 'fs-extra';
 import pathsJSON from '../paths.json';
 
 const config = {
@@ -9,18 +9,20 @@ const config = {
 };
 
 const addRenderers = () => (
-	new Promise((resolve) => {
+	new Promise((resolve, reject) => {
 		const rndrs = config.paths.renderers;
-		const ext = '.html';
-		config.renderers = {};
-		glob([`*${ext}`], { cwd: rndrs }).then((files) => {
-			files
-				.map(filename => path.basename(filename, ext))
-				.forEach((name) => {
-					const pathname = `${name}Renderer`;
-					config.renderers[name] = { pathname, dependencies: null };
-					config.paths[pathname] = path.resolve(rndrs, name);
-				});
+		config.renderers = new Map();
+		fs.readdir(rndrs, (err, files) => {
+			if (err) return reject(err);
+			const folders = files.filter(name => (
+				fs.statSync(`${rndrs}/${name}`).isDirectory() && !name.startsWith('_')
+			));
+			if (folders.length === 0) return reject('No renderers found.');
+			folders.forEach(name => {
+				const pathname = `${name}Renderer`;
+				config.renderers.set(name, { pathname, dependencies: null });
+				config.paths[pathname] = path.resolve(rndrs, name);
+			});
 			resolve();
 		});
 	})

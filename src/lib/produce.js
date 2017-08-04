@@ -4,15 +4,14 @@ import compile from './compile';
 
 export default () => (
 	new Promise((resolve, reject) => {
-		log.debug('Producing distribution folder...');
+		log.debug('Producing bundles...');
 
-		const renderersNames = Object.keys(config.renderers);
-
-		const compileScripts = renderersNames.map((name) => {
-			const src = config.paths[config.renderers[name].pathname];
+		const compileScripts = Array.from(config.renderers.keys()).map((name) => {
+			const src = config.paths[config.renderers.get(name).pathname];
 			return compile.js(`${src}/index.js`).then((result) => {
 				const sources = result.map.sources;
-				config.renderers[name].dependencies = sources;
+				config.renderers.get(name).dependencies = sources;
+				log(config.renderers.get(name).dependencies);
 				Object.keys(config.dependants).forEach((dependant) => {
 					config.dependants.get(dependant).delete(name);
 				});
