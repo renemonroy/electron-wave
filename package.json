@@ -1,6 +1,6 @@
 {
   "name": "@renemonroy/electron-wave",
-  "version": "1.0.59",
+  "version": "1.0.61",
   "description": "Set of scripts to simplify creation of electron apps.",
   "main": "dist/electron-wave.js",
   "module": "dist/electron-wave.es.js",

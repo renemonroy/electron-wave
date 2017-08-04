@@ -7,19 +7,20 @@ export default () => (
 		log.debug('Producing bundles...');
 
 		const compileScripts = Array.from(config.renderers.keys()).map((name) => {
-			const src = config.paths[config.renderers.get(name).pathname];
+			const renderer = config.renderers.get(name);
+			const src = config.paths[renderer.pathname];
 			return compile.js(`${src}/index.js`).then((result) => {
-				const sources = result.map.sources;
-				config.renderers.get(name).dependencies = sources;
-				log(config.renderers.get(name).dependencies);
-				Object.keys(config.dependants).forEach((dependant) => {
-					config.dependants.get(dependant).delete(name);
+				const dependencies = result.map.sources;
+				const dependants = config.dependants;
+				renderer.dependencies = dependencies;
+				Object.keys(dependants).forEach((dependant) => {
+					dependants.get(dependant).delete(name);
 				});
-				sources.forEach((dependency) => {
-					if (!config.dependants.has(dependency)) {
-						config.dependants.set(dependency, new Set());
+				dependencies.forEach((dependency) => {
+					if (!dependants.has(dependency)) {
+						dependants.set(dependency, new Set());
 					}
-					config.dependants.get(dependency).add(name);
+					dependants.get(dependency).add(name);
 				});
 				return result;
 			});
