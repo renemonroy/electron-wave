@@ -41,9 +41,10 @@ export default (bundles) => (
 			.then(ensureBundles)
 			.then((results) => {
 				log.debug('Created sources: ↴\n', results);
-				return resolve();
+				return;
 			})
 			.then(injectResults)
+			.then(() => resolve())
 			.catch(err => reject(err));
 	})
 );
