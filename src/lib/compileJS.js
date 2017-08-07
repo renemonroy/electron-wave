@@ -16,7 +16,8 @@ const isMain = (src) => path.dirname(src) === config.paths.main;
 
 const nodeExternals = () => {
 	const main = ['fs', 'path', 'os', 'child_process'];
-	const appPkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+
+	const appPkg = JSON.parse(fs.readFileSync(config.paths.package, 'utf-8'));
 	return main.concat(Object.keys(appPkg.dependencies));
 };
 

@@ -1,5 +1,5 @@
 {
-	"packageJson": "package.json",
+	"package": "package.json",
 	"nodeModules": "node_modules",
 	"src": "src",
 	"build": "dist",
