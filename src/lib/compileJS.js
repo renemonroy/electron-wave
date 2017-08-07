@@ -5,6 +5,7 @@ import eslint from 'rollup-plugin-eslint';
 import json from 'rollup-plugin-json';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import uglify from 'rollup-plugin-uglify';
 import log from './log';
 import { filterNulls } from './utils';
 import config from './config';
@@ -41,7 +42,8 @@ export default (src) => (
 				}),
 				commonjs({
 					include: [`${paths.nodeModules}/**`]
-				})
+				}),
+				isProduction ? uglify() : null
 			])
 		};
 

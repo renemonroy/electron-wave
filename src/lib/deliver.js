@@ -3,7 +3,8 @@ import fs from 'fs-extra';
 import log from './log';
 import config from './config';
 
-const RENDERER_JS = 'index.js';
+const INDEX_CSS = config.indexCSS;
+const INDEX_JS = config.indexJS;
 
 export default (bundles) => (
 	new Promise((resolve, reject) => {
@@ -17,9 +18,9 @@ export default (bundles) => (
 			return;
 		};
 
-		// const linkTag = src => (
-		// 	`<link rel="stylesheet" type="text(css> href="${src}"`
-		// );
+		const linkTag = src => (
+			`<link rel="stylesheet" type="text/css" href="${src}">`
+		);
 
 		const scriptTag = src => (
 			`<script src="${src}" type="text/javascript" charset="utf-8"></script>`
@@ -27,7 +28,7 @@ export default (bundles) => (
 
 		const ensureBundles = () => (
 			Promise.all(bundles.map((bundle) => {
-				if (bundle.type === 'renderer') {
+				if (bundle.context === 'renderer') {
 					const src = bundle.src.replace(renderersPath, buildPath);
 					renderers[bundle.name] = renderers[bundle.name] || {};
 					return Promise.resolve()
@@ -38,6 +39,8 @@ export default (bundles) => (
 							renderers[bundle.name][ext] = src;
 							return src;
 						});
+				} else {
+					return null;
 				}
 			}))
 		);
@@ -51,7 +54,9 @@ export default (bundles) => (
 					.then(() => fs.copy(indexHtmlSrc, indexHtmlBuild))
 					.then(() => fs.readFile(indexHtmlBuild, 'utf-8'))
 					.then((content) => {
-						return content.replace(/<\/body>/gi, `${scriptTag(RENDERER_JS)}\n</body>`);
+						return content
+							.replace(/<\/head>/gi, `${linkTag(INDEX_CSS)}\n</head>`)
+							.replace(/<\/body>/gi, `${scriptTag(INDEX_JS)}\n</body>`);
 					})
 					.then((result) => fs.writeFile(indexHtmlBuild, result));
 			}))

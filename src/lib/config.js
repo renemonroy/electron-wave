@@ -5,7 +5,10 @@ import pathsJSON from '../paths.json';
 const config = {
 	debug: false,
 	cwd: null,
-	watch: null
+	watch: null,
+	indexCSS: 'index.css',
+	indexJS: 'index.js',
+	indexHTML: 'index.html'
 };
 
 const addRenderers = () => (
@@ -54,5 +57,15 @@ config.set = (options = {}) => (
 			.then(() => resolve());
 	})
 );
+
+config.removeDependantFromSource = (dependant, source) => (
+	config.dependants.get(source).delete(dependant)
+);
+
+config.addDependantToSource = (dependant, source) => {
+	const dependants = config.dependants;
+	if (!dependants.has(source)) dependants.set(source, new Set());
+	dependants.get(source).add(dependant);
+};
 
 export default config;
