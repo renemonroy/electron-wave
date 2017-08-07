@@ -27,6 +27,11 @@ export default (bundles) => (
 			}))
 		);
 
+		const logResults = (results) => {
+			log.debug('Created sources: ↴\n', results);
+			return;
+		};
+
 		const injectResults = () => (
 			Promise.all(Object.keys(renderers).map((name) => {
 				const indexHtml = path.join(name, 'index.html');
@@ -39,10 +44,7 @@ export default (bundles) => (
 
 		Promise.resolve()
 			.then(ensureBundles)
-			.then((results) => {
-				log.debug('Created sources: ↴\n', results);
-				return;
-			})
+			.then(logResults)
 			.then(injectResults)
 			.then(() => resolve())
 			.catch(err => reject(err));
