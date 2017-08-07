@@ -21,7 +21,7 @@ const addRenderers = () => (
 				.filter(name => fs.statSync(`${rndrs}/${name}`).isDirectory() && !name.startsWith('_'))
 				.forEach(name => {
 					const pathname = `${name}Renderer`;
-					config.renderers.set(name, { pathname, dependencies: null });
+					config.renderers.set(name, { pathname });
 					config.paths[pathname] = path.resolve(rndrs, name);
 				});
 			resolve();
