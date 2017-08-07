@@ -10,8 +10,9 @@ export default (bundles) => (
 	new Promise((resolve, reject) => {
 		log.debug('Delivering production files...');
 		const renderersPath = config.paths.renderers;
-		const buildPath = config.paths.build;
 		const renderers = {};
+		const mainPath = config.paths.main;
+		const buildPath = config.paths.build;
 
 		const logResults = (results) => {
 			log.debug('Created sources: ↴\n', results);
@@ -28,20 +29,26 @@ export default (bundles) => (
 
 		const ensureBundles = () => (
 			Promise.all(bundles.map((bundle) => {
+				let src = null;
 				if (bundle.context === 'renderer') {
-					const src = bundle.src.replace(renderersPath, buildPath);
-					renderers[bundle.name] = renderers[bundle.name] || {};
-					return Promise.resolve()
-						.then(() => fs.ensureFile(src))
-						.then(() => fs.writeFile(src, bundle.code))
-						.then(() => {
-							const ext = path.extname(src).replace('.', '');
-							renderers[bundle.name][ext] = src;
-							return src;
-						});
+					renderers[bundle.name] = renderers[bundle.main] || {};
+					src = bundle.src.replace(renderersPath, buildPath);
+				} else if (bundle.context === 'main') {
+					src = bundle.src.replace(mainPath, buildPath);
 				} else {
+					log.debug('Unrecognized bundle:', bundle);
 					return null;
 				}
+				return Promise.resolve()
+					.then(() => fs.ensureFile(src))
+					.then(() => fs.writeFile(src, bundle.code))
+					.then(() => {
+						if (bundle.context === 'renderer') {
+							const ext = path.extname(src).replace('.', '');
+							renderers[bundle.name][ext] = src;
+						}
+						return src;
+					});
 			}))
 		);
 

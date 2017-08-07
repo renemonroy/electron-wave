@@ -26,7 +26,7 @@ const addRenderers = () => (
 				});
 			resolve();
 		} catch (err) {
-			return reject();
+			return reject(err);
 		}
 	})
 );

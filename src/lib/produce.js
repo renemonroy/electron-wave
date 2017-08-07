@@ -21,7 +21,7 @@ export default () => (
 			return;
 		};
 
-		const compileStyles = Array.from(config.renderers.keys()).map((name) => {
+		const compileRenderersStyles = Array.from(config.renderers.keys()).map((name) => {
 			const renderer = config.renderers.get(name);
 			const src = path.join(config.paths[renderer.pathname], INDEX_CSS);
 			return compileCSS(src).then((result) => {
@@ -34,7 +34,7 @@ export default () => (
 			});
 		});
 
-		const compileScripts = Array.from(config.renderers.keys()).map((name) => {
+		const compileRenderersScripts = Array.from(config.renderers.keys()).map((name) => {
 			const renderer = config.renderers.get(name);
 			const src = path.join(config.paths[renderer.pathname], INDEX_JS);
 			return compileJS(src).then((result) => {
@@ -42,8 +42,17 @@ export default () => (
 				return { type: 'js', context: 'renderer', name, src, code: result.code };
 			});
 		});
+
+		const compileMainScripts = () => {
+			const name = 'main';
+			const src = path.join(config.paths.main, INDEX_JS);
+			return compileJS(src).then((result) => {
+				syncDependants('$root', result.map.sources);
+				return { type: 'js', context: name, name, src, code: result.code };
+			});
+		};
 		
-		Promise.all([...compileStyles, ...compileScripts])
+		Promise.all([...compileRenderersStyles, ...compileRenderersScripts, ...compileMainScripts()])
 			.then((result) => {
 				log.debug('Bundles: ↴\n', result);
 				resolve(result);

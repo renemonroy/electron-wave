@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs-extra';
 import { rollup } from 'rollup';
 import buble from 'rollup-plugin-buble';
 import commonjs from 'rollup-plugin-commonjs';
@@ -9,6 +11,14 @@ import uglify from 'rollup-plugin-uglify';
 import log from './log';
 import { filterNulls } from './utils';
 import config from './config';
+
+const isMain = (src) => path.dirname(src) === config.paths.main;
+
+const nodeExternals = () => {
+	const main = ['fs', 'path', 'os', 'child_process'];
+	const appPkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+	return main.concat(Object.keys(appPkg.dependencies));
+};
 
 export default (src) => (
 	new Promise((resolve, reject) => {
@@ -44,7 +54,8 @@ export default (src) => (
 					include: [`${paths.nodeModules}/**`]
 				}),
 				isProduction ? uglify() : null
-			])
+			]),
+			external: isMain(src) ? nodeExternals() : [],
 		};
 
 		rollup(rollupConfig)
