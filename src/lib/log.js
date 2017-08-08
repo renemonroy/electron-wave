@@ -1,7 +1,6 @@
 /* eslint no-console: 0 */
 import chalk from 'chalk';
 import figlet from 'figlet';
-const { version } = require('../package.json');
 
 const pad = (str, size) => {
 	let s = String(str);
@@ -53,7 +52,7 @@ log.clear = () => {
 	);
 };
 
-log.sign = (txt, options) => {
+log.sign = (txt, version, options) => {
 	const signature = figlet.textSync(txt, options);
 	console.log(`${signature.replace(/((\s*\S+)*)\s*/, "$1")} v${version}\n`);
 };

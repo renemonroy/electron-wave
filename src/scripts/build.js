@@ -18,8 +18,8 @@ export default (options) => {
 	config
 		.set(options)
 		.then(() => {
-			const { productName } = JSON.parse(fs.readFileSync(config.paths.package, 'utf-8'));
-			log.sign(productName, { font: 'Big' });
+			const { productName, version } = JSON.parse(fs.readFileSync(config.paths.package, 'utf-8'));
+			log.sign(productName, version, { font: 'Big' });
 			return;
 		})
 		.then(prepare)
